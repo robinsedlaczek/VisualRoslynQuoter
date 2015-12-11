@@ -9,9 +9,12 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow">
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <TextBlock Margin="10" HorizontalAlignment="Center">VisualRoslynQuoterToolWindow</TextBlock>
-            <Button Content="Click me!" Click="button1_Click" Width="120" Height="80" Name="button1"/>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Text="Visual Roslyn Quoter" HorizontalAlignment="Center" Grid.Row="0" />
+        <TextBox x:Name="SyntaxFactoryCodeTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1"/>
     </Grid>
 </UserControl>
