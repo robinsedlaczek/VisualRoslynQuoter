@@ -43,38 +43,35 @@ namespace WaveDev.VisualRoslynQuoter
             try
             {
                 var code = @"
-                    using System;
-                    using System.Collections.Generic;
-                    using System.Linq;
-                    using System.Text;
-                    using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-                    namespace ConsoleApplication1
-                    {
-                        class Program
-                        {
-                            static void Main(string[] args)
-                            {
-                                DoSomething();
-                            }
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            DoSomething();
+        }
 
-                            public static void DoSomething()
-                            {
+        public static void DoSomething()
+        {
 
-                            }
-                        }
-                    }
-                    ";
+        }
+    }
+}";
 
                 //var code = e.NewSnapshot.GetText();
                 var sourceNode = CSharpSyntaxTree.ParseText(code).GetRoot() as CSharpSyntaxNode;
-
                 var quoter = new Quoter
                 {
                     OpenParenthesisOnNewLine = false,
                     ClosingParenthesisOnNewLine = false,
-                    UseDefaultFormatting = false,
-                    RemoveRedundantModifyingCalls = false
+                    UseDefaultFormatting = true
                 };
 
                 var generatedCode = quoter.Quote(sourceNode);
