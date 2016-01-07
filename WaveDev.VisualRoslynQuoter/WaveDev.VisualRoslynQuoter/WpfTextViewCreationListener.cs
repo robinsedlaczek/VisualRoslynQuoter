@@ -54,8 +54,11 @@ namespace WaveDev.VisualRoslynQuoter
 
                     if (symbolInfo.Symbol != null)
                     {
+                        var displayString = string.Empty;
                         INamedTypeSymbol namedType = symbolInfo.Symbol.ContainingType;
-                        var displayString = namedType.ToDisplayString();
+
+                        if (namedType != null)
+                            displayString = namedType.ToDisplayString();
                     }
 
                     if (symbolInfo.Symbol != null && typeInfo.Type == null)

@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -18,12 +21,12 @@ namespace WaveDev.VisualRoslynQuoter
 
         public IEnumerable<ITagSpan<HighlightSyntaxWithSymbolTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (CurrentWord == null)
-                yield break;
+            //if (CurrentWord == null)
+            //    yield break;
 
-            // Hold on to a "snapshot" of the word spans and current word, so that we maintain the same
-            // collection throughout
-            SnapshotSpan currentWord = CurrentWord.Value;
+            //// Hold on to a "snapshot" of the word spans and current word, so that we maintain the same
+            //// collection throughout
+            //SnapshotSpan currentWord = CurrentWord.Value;
             NormalizedSnapshotSpanCollection wordSpans = WordSpans;
 
             if (spans.Count == 0 || wordSpans.Count == 0)
@@ -35,14 +38,14 @@ namespace WaveDev.VisualRoslynQuoter
                 wordSpans = new NormalizedSnapshotSpanCollection(
                     wordSpans.Select(span => span.TranslateTo(spans[0].Snapshot, SpanTrackingMode.EdgeExclusive)));
 
-                currentWord = currentWord.TranslateTo(spans[0].Snapshot, SpanTrackingMode.EdgeExclusive);
+                //currentWord = currentWord.TranslateTo(spans[0].Snapshot, SpanTrackingMode.EdgeExclusive);
             }
 
             // First, yield back the word the cursor is under (if it overlaps) 
             // Note that we'll yield back the same word again in the wordspans collection; 
             // the duplication here is expected. 
-            if (spans.OverlapsWith(new NormalizedSnapshotSpanCollection(currentWord)))
-                yield return new TagSpan<HighlightSyntaxWithSymbolTag>(currentWord, new HighlightSyntaxWithSymbolTag());
+            //if (spans.OverlapsWith(new NormalizedSnapshotSpanCollection(currentWord)))
+            //    yield return new TagSpan<HighlightSyntaxWithSymbolTag>(currentWord, new HighlightSyntaxWithSymbolTag());
 
             // Second, yield all the other words in the file 
             foreach (SnapshotSpan span in NormalizedSnapshotSpanCollection.Overlap(spans, wordSpans))
@@ -93,15 +96,80 @@ namespace WaveDev.VisualRoslynQuoter
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
             // If a new snapshot wasn't generated, then skip this layout 
-            if (e.NewSnapshot != e.OldSnapshot)
+            //if (e.NewSnapshot != e.OldSnapshot)
+            //{
+                //UpdateAtCaretPosition(View.Caret.Position);
+                UpdateSyntaxWithSymbolTextAdornments(e.NewSnapshot);
+            //}
+        }
+
+        private void UpdateSyntaxWithSymbolTextAdornments(ITextSnapshot newSnapshot)
+        {
+            var syntaxNodes = CollectSyntaxNodesWithFoundSymbols(newSnapshot);
+            var wordSpans = new List<SnapshotSpan>();
+
+            foreach (var node in syntaxNodes)
             {
-                UpdateAtCaretPosition(View.Caret.Position);
+                try
+                {
+                    var length = node.Span.End - node.Span.Start;
+                    var span = new SnapshotSpan(newSnapshot, node.Span.Start, length);
+                    // var wordExtent = TextStructureNavigator.GetExtentOfWord(span.Start);
+
+                    wordSpans.Add(span);
+                }
+                catch
+                {
+
+                }
             }
+
+            lock (updateLock)
+            {
+                WordSpans = new NormalizedSnapshotSpanCollection(wordSpans);
+
+                var tempEvent = TagsChanged;
+
+                if (tempEvent != null)
+                    tempEvent(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot, 0, SourceBuffer.CurrentSnapshot.Length)));
+            }
+        }
+
+        private static IList<SyntaxNode> CollectSyntaxNodesWithFoundSymbols(ITextSnapshot newSnapshot)
+        {
+            var code = newSnapshot.GetText();
+            var tree = CSharpSyntaxTree.ParseText(code);
+            var sourceNode = tree.GetRoot() as CompilationUnitSyntax;
+
+            var references = new[]
+            {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.CodeBase.Substring(8)),
+                MetadataReference.CreateFromFile(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Core.dll")
+            };
+
+            var compilation = CSharpCompilation
+                .Create("CodeInCurrentView")
+                .AddReferences(references)
+                .AddSyntaxTrees(tree);
+
+            var semanticModel = compilation.GetSemanticModel(tree);
+
+            var syntaxNodesWithFoundSymbols = new List<SyntaxNode>();
+
+            foreach (var node in sourceNode.DescendantNodes())
+            {
+                var symbolInfo = semanticModel.GetSymbolInfo(node);
+
+                if (symbolInfo.Symbol != null)
+                    syntaxNodesWithFoundSymbols.Add(node);
+            }
+
+            return syntaxNodesWithFoundSymbols;
         }
 
         private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
         {
-            UpdateAtCaretPosition(e.NewPosition);
+            //UpdateAtCaretPosition(e.NewPosition);
         }
 
         private void UpdateAtCaretPosition(CaretPosition caretPosition)

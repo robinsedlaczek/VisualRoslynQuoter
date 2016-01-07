@@ -18,11 +18,10 @@ namespace WaveDev.VisualRoslynQuoter
         [Import]
         internal ITextStructureNavigatorSelectorService TextStructureNavigatorSelector { get; set; }
 
-
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
+            
             //provide highlighting only on the top buffer 
-
             if (textView.TextBuffer != buffer)
                 return null;
 
