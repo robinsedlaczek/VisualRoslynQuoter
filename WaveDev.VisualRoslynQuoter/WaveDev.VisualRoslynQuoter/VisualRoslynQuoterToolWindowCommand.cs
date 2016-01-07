@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -44,13 +43,13 @@ namespace WaveDev.VisualRoslynQuoter
                 throw new ArgumentNullException("package");
             }
 
-            this.package = package;
+            package = package;
 
-            OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.ShowToolWindow, menuCommandID);
+                var menuItem = new MenuCommand(ShowToolWindow, menuCommandID);
                 commandService.AddCommand(menuItem);
             }
         }
@@ -71,7 +70,7 @@ namespace WaveDev.VisualRoslynQuoter
         {
             get
             {
-                return this.package;
+                return package;
             }
         }
 
@@ -94,7 +93,7 @@ namespace WaveDev.VisualRoslynQuoter
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.package.FindToolWindow(typeof(VisualRoslynQuoterToolWindow), 0, true);
+            ToolWindowPane window = package.FindToolWindow(typeof(VisualRoslynQuoterToolWindow), 0, true);
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException("Cannot create tool window");

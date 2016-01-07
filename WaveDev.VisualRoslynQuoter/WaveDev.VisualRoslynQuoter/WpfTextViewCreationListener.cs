@@ -4,8 +4,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.IO;
 using System.Linq;
 
 namespace WaveDev.VisualRoslynQuoter
@@ -29,7 +29,7 @@ namespace WaveDev.VisualRoslynQuoter
             {
                 var code = e.NewSnapshot.GetText();
                 var tree = CSharpSyntaxTree.ParseText(code);
-                var sourceNode = tree.GetRoot() as CSharpSyntaxNode;
+                var sourceNode = tree.GetRoot() as CompilationUnitSyntax;
 
                 var memberAccessExpressions = sourceNode.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
 
@@ -42,23 +42,39 @@ namespace WaveDev.VisualRoslynQuoter
 
                 var semanticModel = compilation.GetSemanticModel(tree);
 
-                var info =
-                    from expression in memberAccessExpressions
-                    select new
-                    {
-                        Syntax = expression.Expression,
-                        SymbolInfo = semanticModel.GetSymbolInfo(expression.Expression),
-                        TypeInfo = semanticModel.GetTypeInfo(expression.Expression)
-                    };
+                var symbolInfos = new List<SemanticInfo>();
+                var typeInfos = new List<SemanticInfo>();
+                var symbolAndTypeInfos = new List<SemanticInfo>();
 
-
-
-                foreach (var expression in memberAccessExpressions)
+                foreach (var node in sourceNode.DescendantNodes())
                 {
-                    var symbolInfo = semanticModel.GetSymbolInfo(expression);
-                    var typeInfo = semanticModel.GetTypeInfo(expression);
+                    var targetList = symbolAndTypeInfos;
+                    var symbolInfo = semanticModel.GetSymbolInfo(node);
+                    var typeInfo = semanticModel.GetTypeInfo(node);
 
+                    if (symbolInfo.Symbol != null)
+                    {
+                        INamedTypeSymbol namedType = symbolInfo.Symbol.ContainingType;
+                        var displayString = namedType.ToDisplayString();
+                    }
+
+                    if (symbolInfo.Symbol != null && typeInfo.Type == null)
+                        targetList = symbolInfos;
+                    else if (symbolInfo.Symbol == null && typeInfo.Type != null)
+                        targetList = typeInfos;
+                    else if (symbolInfo.Symbol == null && typeInfo.Type == null)
+                        continue;
+
+                    targetList.Add(
+                        new SemanticInfo
+                        {
+                            Syntax = node,
+                            Kind = node.Kind(),
+                            SymbolInfo = symbolInfo,
+                            TypeInfo = typeInfo
+                        });
                 }
+
 
                 //var docComment = symbolInfo.Symbol.GetDocumentationCommentXml();
 

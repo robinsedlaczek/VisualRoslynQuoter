@@ -25,7 +25,7 @@ namespace WaveDev.VisualRoslynQuoter
         /// </summary>
         public VisualRoslynQuoterToolWindowControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             DataContext = this;
         }

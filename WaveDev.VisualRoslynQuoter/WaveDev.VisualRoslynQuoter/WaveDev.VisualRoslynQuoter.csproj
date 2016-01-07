@@ -51,8 +51,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="HighlightSyntaxWithSymbolFormatDefinition.cs" />
+    <Compile Include="HighlightSyntaxWithSymbolTag.cs" />
+    <Compile Include="HighlightSyntaxWithSymbolTagger.cs" />
+    <Compile Include="HighlightSyntaxWithSymbolTaggerProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quoter.cs" />
+    <Compile Include="SemanticInfo.cs" />
     <Compile Include="VisualRoslynQuoterToolWindow.cs" />
     <Compile Include="VisualRoslynQuoterToolWindowCommand.cs" />
     <Compile Include="VisualRoslynQuoterToolWindowControl.xaml.cs">
