@@ -59,6 +59,7 @@
       <DependentUpon>VisualRoslynQuoterToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="VisualRoslynQuoterToolWindowPackage.cs" />
+    <Compile Include="WpfTextViewCreationListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

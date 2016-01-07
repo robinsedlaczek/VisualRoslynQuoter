@@ -6,23 +6,19 @@
 
 namespace WaveDev.VisualRoslynQuoter
 {
-    using Microsoft.VisualStudio.Text.Editor;
-    using Microsoft.VisualStudio.Utilities;
-    using System.ComponentModel.Composition;
-    using System.Diagnostics.CodeAnalysis;
     using System.Windows;
     using System.Windows.Controls;
-    using System;
-    using Microsoft.CodeAnalysis.CSharp;
+    using System.ComponentModel;
+    using System.Diagnostics;
+
     /// <summary>
     /// Interaction logic for VisualRoslynQuoterToolWindowControl.
     /// </summary>
-    [Export(typeof(IWpfTextViewCreationListener))]
-    [ContentType("text")]
-    [TextViewRole(PredefinedTextViewRoles.Document)]
-    public partial class VisualRoslynQuoterToolWindowControl : UserControl, IWpfTextViewCreationListener
+    public partial class VisualRoslynQuoterToolWindowControl : UserControl, INotifyPropertyChanged
     {
-        private IWpfTextView _textView;
+        private string _quoterText;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisualRoslynQuoterToolWindowControl"/> class.
@@ -30,58 +26,40 @@ namespace WaveDev.VisualRoslynQuoter
         public VisualRoslynQuoterToolWindowControl()
         {
             this.InitializeComponent();
+
+            DataContext = this;
         }
 
-        public void TextViewCreated(IWpfTextView textView)
+        public string QuoterText
         {
-            _textView = textView;
-            _textView.LayoutChanged += OnTextViewLayoutChanged;
-        }
-
-        private void OnTextViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
-        {
-            try
+            get
             {
-                var code = @"
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+                var hash = GetHashCode();
+                Trace.WriteLine("[ToolWindow] hash code: " + hash);
 
-namespace ConsoleApplication1
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            DoSomething();
-        }
+                return _quoterText;
+            }
 
-        public static void DoSomething()
-        {
-
-        }
-    }
-}";
-
-                //var code = e.NewSnapshot.GetText();
-                var sourceNode = CSharpSyntaxTree.ParseText(code).GetRoot() as CSharpSyntaxNode;
-                var quoter = new Quoter
+            set
+            {
+                if (_quoterText != value)
                 {
-                    OpenParenthesisOnNewLine = false,
-                    ClosingParenthesisOnNewLine = false,
-                    UseDefaultFormatting = true
-                };
+                    _quoterText = value;
 
-                var generatedCode = quoter.Quote(sourceNode);
+                    if (PropertyChanged != null)
+                        PropertyChanged(this, new PropertyChangedEventArgs("QuoterText"));
+                }
+            }
+        }
 
-                SyntaxFactoryCodeTextBox.Text = generatedCode;
-            }
-            catch (Exception exception)
-            {
-                SyntaxFactoryCodeTextBox.Text = exception.Message;
-            }
+        private void SetText(string text)
+        {
+            SyntaxFactoryCodeTextBox.Text = text;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.Invoke(() => SyntaxFactoryCodeTextBox.Text = "blubber");
         }
     }
 }
