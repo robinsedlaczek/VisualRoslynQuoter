@@ -51,6 +51,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DTEEditorClassifier.cs" />
+    <Compile Include="DTEEditorClassifierClassificationDefinition.cs" />
+    <Compile Include="DTEEditorClassifierFormat.cs" />
+    <Compile Include="DTEEditorClassifierProvider.cs" />
     <Compile Include="HighlightSyntaxWithSymbolFormatDefinition.cs" />
     <Compile Include="HighlightSyntaxWithSymbolTag.cs" />
     <Compile Include="HighlightSyntaxWithSymbolTagger.cs" />
