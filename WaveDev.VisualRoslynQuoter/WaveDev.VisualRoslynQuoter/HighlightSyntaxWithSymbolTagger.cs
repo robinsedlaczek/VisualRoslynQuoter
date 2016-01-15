@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
@@ -137,6 +138,8 @@ namespace WaveDev.VisualRoslynQuoter
 
         private static IList<SyntaxNode> CollectSyntaxNodesWithFoundSymbols(ITextSnapshot newSnapshot)
         {
+            //var document = newSnapshot.GetOpenDocumentInCurrentContextWithChanges();
+
             var code = newSnapshot.GetText();
             var tree = CSharpSyntaxTree.ParseText(code);
             var sourceNode = tree.GetRoot() as CompilationUnitSyntax;

@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Text.Operations;
+using Microsoft.CodeAnalysis;
 
 namespace WaveDev.VisualRoslynQuoter
 {
@@ -20,7 +21,6 @@ namespace WaveDev.VisualRoslynQuoter
 
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
-            
             //provide highlighting only on the top buffer 
             if (textView.TextBuffer != buffer)
                 return null;
