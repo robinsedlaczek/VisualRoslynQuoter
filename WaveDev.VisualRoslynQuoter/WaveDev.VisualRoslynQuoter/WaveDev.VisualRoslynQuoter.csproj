@@ -51,10 +51,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DTEEditorClassifier.cs" />
-    <Compile Include="DTEEditorClassifierClassificationDefinition.cs" />
-    <Compile Include="DTEEditorClassifierFormat.cs" />
-    <Compile Include="DTEEditorClassifierProvider.cs" />
     <Compile Include="HighlightSyntaxWithSymbolFormatDefinition.cs" />
     <Compile Include="HighlightSyntaxWithSymbolTag.cs" />
     <Compile Include="HighlightSyntaxWithSymbolTagger.cs" />
@@ -112,6 +108,10 @@
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.1.1.1\lib\net45\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.EditorFeatures.Text, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.EditorFeatures.Text.1.1.1\lib\net46\Microsoft.CodeAnalysis.EditorFeatures.Text.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.VisualBasic, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

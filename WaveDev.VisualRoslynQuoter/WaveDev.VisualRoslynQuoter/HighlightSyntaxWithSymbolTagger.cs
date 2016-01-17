@@ -138,11 +138,10 @@ namespace WaveDev.VisualRoslynQuoter
 
         private static IList<SyntaxNode> CollectSyntaxNodesWithFoundSymbols(ITextSnapshot newSnapshot)
         {
-            //var document = newSnapshot.GetOpenDocumentInCurrentContextWithChanges();
-
-            var code = newSnapshot.GetText();
-            var tree = CSharpSyntaxTree.ParseText(code);
-            var sourceNode = tree.GetRoot() as CompilationUnitSyntax;
+            var currentDocument = newSnapshot.GetOpenDocumentInCurrentContextWithChanges();
+            var trees = currentDocument.Project.Documents
+                .Select(document => document.GetSyntaxTreeAsync().Result)
+                .SkipWhile(syntaxTree => syntaxTree.Length == 0);
 
             var references = new[]
             {
@@ -151,21 +150,35 @@ namespace WaveDev.VisualRoslynQuoter
             };
 
             var compilation = CSharpCompilation
-                .Create("CodeInCurrentView")
+                .Create("CodeInCurrentProject")
                 .AddReferences(references)
-                .AddSyntaxTrees(tree);
+                .AddSyntaxTrees(trees);
 
+            var tree = currentDocument.GetSyntaxTreeAsync().Result;
             var semanticModel = compilation.GetSemanticModel(tree);
 
             var syntaxNodesWithFoundSymbols = new List<SyntaxNode>();
+            var sourceNode = tree.GetRoot() as CompilationUnitSyntax;
 
             foreach (var node in sourceNode.DescendantNodes())
             {
                 var symbolInfo = semanticModel.GetSymbolInfo(node);
 
                 if (symbolInfo.Symbol != null)
-                    syntaxNodesWithFoundSymbols.Add(node);
+                {
+                    var namedType = symbolInfo.Symbol as INamedTypeSymbol;
+
+                    if (namedType != null && namedType.AllInterfaces.Where(namedInterfaceType => namedInterfaceType.Name == "ISensitiveObject").Any())
+                        syntaxNodesWithFoundSymbols.Add(node);
+                }
             }
+
+
+
+            var memberAccessExpressions = sourceNode.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
+
+            //memberAccessExpressions.First().Expression.
+            
 
             return syntaxNodesWithFoundSymbols;
         }

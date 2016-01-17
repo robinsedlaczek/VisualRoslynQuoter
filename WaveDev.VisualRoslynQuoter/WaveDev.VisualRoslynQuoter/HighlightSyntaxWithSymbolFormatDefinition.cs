@@ -14,6 +14,7 @@ namespace WaveDev.VisualRoslynQuoter
         {
             BackgroundColor = Colors.LightBlue;
             ForegroundColor = Colors.DarkBlue;
+            Border = new Pen(Brushes.Red, 2);
             DisplayName = "Highlight Syntax with Symbol";
             ZOrder = 5;
         }
