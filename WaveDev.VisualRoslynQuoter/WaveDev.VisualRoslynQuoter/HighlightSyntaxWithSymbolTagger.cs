@@ -138,7 +138,12 @@ namespace WaveDev.VisualRoslynQuoter
 
         private static IList<SyntaxNode> CollectSyntaxNodesWithFoundSymbols(ITextSnapshot newSnapshot)
         {
+            var syntaxNodesWithFoundSymbols = new List<SyntaxNode>();
             var currentDocument = newSnapshot.GetOpenDocumentInCurrentContextWithChanges();
+
+            if (currentDocument == null)
+                return syntaxNodesWithFoundSymbols;
+
             var trees = currentDocument.Project.Documents
                 .Select(document => document.GetSyntaxTreeAsync().Result)
                 .SkipWhile(syntaxTree => syntaxTree.Length == 0);
@@ -156,8 +161,6 @@ namespace WaveDev.VisualRoslynQuoter
 
             var tree = currentDocument.GetSyntaxTreeAsync().Result;
             var semanticModel = compilation.GetSemanticModel(tree);
-
-            var syntaxNodesWithFoundSymbols = new List<SyntaxNode>();
             var sourceNode = tree.GetRoot() as CompilationUnitSyntax;
 
             foreach (var node in sourceNode.DescendantNodes())

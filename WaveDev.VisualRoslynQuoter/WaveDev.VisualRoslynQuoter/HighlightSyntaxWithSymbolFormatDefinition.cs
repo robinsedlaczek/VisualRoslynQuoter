@@ -12,11 +12,12 @@ namespace WaveDev.VisualRoslynQuoter
     {
         public HighlightSyntaxWithSymbolFormatDefinition()
         {
-            BackgroundColor = Colors.LightBlue;
-            ForegroundColor = Colors.DarkBlue;
+            //BackgroundColor = Colors.Red;
+            //ForegroundColor = Colors.White;
             Border = new Pen(Brushes.Red, 2);
             DisplayName = "Highlight Syntax with Symbol";
             ZOrder = 5;
+            //ForegroundBrush = Brushes.White;
         }
     }
 }

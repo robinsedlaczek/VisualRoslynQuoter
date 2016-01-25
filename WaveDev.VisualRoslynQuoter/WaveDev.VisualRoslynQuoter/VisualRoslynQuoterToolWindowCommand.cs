@@ -45,7 +45,11 @@ namespace WaveDev.VisualRoslynQuoter
 
             package = package;
 
-            OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            if (ServiceProvider == null)
+                return;
+
+            var commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
