@@ -63,9 +63,6 @@ namespace WaveDev.VisualRoslynQuoter
         protected override void Initialize()
         {
             base.Initialize();
-
-            Services.VsSolution = (IVsSolution)GetService(typeof(IVsSolution));
-            VisualRoslynQuoterToolWindowCommand.Initialize(this);
         }
 
         #endregion
