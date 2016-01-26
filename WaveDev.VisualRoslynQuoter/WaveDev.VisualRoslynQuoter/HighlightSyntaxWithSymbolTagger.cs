@@ -163,6 +163,7 @@ namespace WaveDev.VisualRoslynQuoter
             var semanticModel = compilation.GetSemanticModel(tree);
             var sourceNode = tree.GetRoot() as CompilationUnitSyntax;
 
+            // [RS] Collect named type symbols.
             foreach (var node in sourceNode.DescendantNodes())
             {
                 var symbolInfo = semanticModel.GetSymbolInfo(node);
@@ -176,12 +177,18 @@ namespace WaveDev.VisualRoslynQuoter
                 }
             }
 
-
-
+            // [RS] Collect member access expressions.
             var memberAccessExpressions = sourceNode.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
+            foreach (var expression in memberAccessExpressions)
+            {
+                var typeInfo = semanticModel.GetTypeInfo(expression);
 
-            //memberAccessExpressions.First().Expression.
-            
+                if (typeInfo.Type != null)
+                {
+                    if (typeInfo.Type.AllInterfaces.Where(namedInterfaceType => namedInterfaceType.Name == "ISensitiveObject").Any())
+                        syntaxNodesWithFoundSymbols.Add(expression);
+                }
+            }
 
             return syntaxNodesWithFoundSymbols;
         }
