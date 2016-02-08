@@ -51,14 +51,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HighlightSyntaxWithSymbolFormatDefinition.cs" />
-    <Compile Include="HighlightSyntaxWithSymbolTag.cs" />
-    <Compile Include="HighlightSyntaxWithSymbolTagger.cs" />
-    <Compile Include="HighlightSyntaxWithSymbolTaggerProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quoter.cs" />
     <Compile Include="SemanticInfo.cs" />
-    <Compile Include="Services.cs" />
     <Compile Include="VisualRoslynQuoterToolWindow.cs" />
     <Compile Include="VisualRoslynQuoterToolWindowCommand.cs" />
     <Compile Include="VisualRoslynQuoterToolWindowControl.xaml.cs">
@@ -268,7 +263,6 @@
       <HintPath>..\packages\System.Reflection.Metadata.1.1.0\lib\dotnet5.2\System.Reflection.Metadata.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />

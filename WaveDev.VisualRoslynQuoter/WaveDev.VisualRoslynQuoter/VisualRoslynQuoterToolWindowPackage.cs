@@ -8,7 +8,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace WaveDev.VisualRoslynQuoter
 {
@@ -63,9 +62,6 @@ namespace WaveDev.VisualRoslynQuoter
         protected override void Initialize()
         {
             base.Initialize();
-
-            Services.VsSolution = (IVsSolution)GetService(typeof(IVsSolution));
-            VisualRoslynQuoterToolWindowCommand.Initialize(this);
         }
 
         #endregion

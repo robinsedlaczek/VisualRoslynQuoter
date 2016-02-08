@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System;
@@ -30,6 +31,8 @@ namespace WaveDev.VisualRoslynQuoter
                 var code = e.NewSnapshot.GetText();
                 var tree = CSharpSyntaxTree.ParseText(code);
                 var sourceNode = tree.GetRoot() as CompilationUnitSyntax;
+
+                var currentDocument = e.NewSnapshot.GetOpenDocumentInCurrentContextWithChanges();
 
                 var memberAccessExpressions = sourceNode.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
 
