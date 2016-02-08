@@ -1,13 +1,22 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="VisualRoslynQuoterToolWindowPackage.cs" company="Company">
+// <copyright file="VisualCodeQuoterToolWindowPackage.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.InteropServices;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.Win32;
+using Microsoft.VisualStudio.Text.Operations;
+using Microsoft.VisualStudio.Text.Editor;
 
 namespace WaveDev.VisualRoslynQuoter
 {
@@ -29,28 +38,27 @@ namespace WaveDev.VisualRoslynQuoter
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
+    [InstalledProductRegistration("#1110", "#1112", "1.0", IconResourceID = 1400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(VisualRoslynQuoterToolWindow))]
-    [Guid(VisualRoslynQuoterToolWindowPackage.PackageGuidString)]
+    [ProvideToolWindow(typeof(VisualCodeQuoterToolWindow))]
+    [Guid(VisualCodeQuoterToolWindowPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    public sealed class VisualRoslynQuoterToolWindowPackage : Package
+    public sealed class VisualCodeQuoterToolWindowPackage : Package
     {
         /// <summary>
-        /// VisualRoslynQuoterToolWindowPackage GUID string.
+        /// VisualCodeQuoterToolWindowPackage GUID string.
         /// </summary>
-        public const string PackageGuidString = "df0f73dc-32b6-410c-a669-e059c67f8af2";
+        public const string PackageGuidString = "838b1ad2-a578-40b0-97a3-227b15627b70";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VisualRoslynQuoterToolWindow"/> class.
+        /// Initializes a new instance of the <see cref="VisualCodeQuoterToolWindow"/> class.
         /// </summary>
-        public VisualRoslynQuoterToolWindowPackage()
+        public VisualCodeQuoterToolWindowPackage()
         {
             // Inside this method you can place any initialization code that does not require
             // any Visual Studio service because at this point the package object is created but
             // not sited yet inside Visual Studio environment. The place to do all the other
             // initialization is the Initialize method.
-            
         }
 
         #region Package Members
@@ -61,6 +69,7 @@ namespace WaveDev.VisualRoslynQuoter
         /// </summary>
         protected override void Initialize()
         {
+            VisualCodeQuoterToolWindowCommand.Initialize(this);
             base.Initialize();
         }
 

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="WaveDev.VisualRoslynQuoter.Robin Sedlaczek.119aa0b6-d5ef-44d9-9188-dd8f515f1814" Version="1.0" Language="en-US" Publisher="Robin Sedlaczek" />
-    <DisplayName>WaveDev.VisualRoslynQuoter</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Identity Id="WaveDev.VisualCodeQuoter.Robin Sedlaczek.119aa0b6-d5ef-44d9-9188-dd8f515f1814" Version="1.0" Language="en-US" Publisher="Robin Sedlaczek" />
+    <DisplayName>WaveDev VisualCodeQuoter</DisplayName>
+    <Description xml:space="preserve">This extension brings Kirill Osenkov's Roslyn Code Quoter (http://roslynquoter.azurewebsites.net/) as a tool window to Visual Studio. The tool window shows how the selected code in the editor can be created by calls to the Roslyn Syntax Api.</Description>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />

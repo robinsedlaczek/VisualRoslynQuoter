@@ -22,7 +22,7 @@
 
   <!--The Commands section is where commands, menus, and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
-  <Commands package="guidVisualRoslynQuoterToolWindowPackage">
+  <Commands package="guidVisualCodeQuoterToolWindowPackage">
     <!-- Inside this section we have different sub-sections: one for the menus, another
     for the menu groups, one for the buttons (the actual commands), one for the combos
     and the last one for the bitmaps used. Each element is identified by a command id that
@@ -42,11 +42,11 @@
               <CommandFlag>DefaultInvisible</CommandFlag>
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
-      <Button guid="guidVisualRoslynQuoterToolWindowPackageCmdSet" id="VisualRoslynQuoterToolWindowCommandId" priority="0x0100" type="Button">
+      <Button guid="guidVisualCodeQuoterToolWindowPackageCmdSet" id="VisualCodeQuoterToolWindowCommandId" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>VisualRoslynQuoterToolWindow</ButtonText>
+          <ButtonText>VisualCodeQuoterToolWindow</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -58,20 +58,20 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\VisualRoslynQuoterToolWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough"/>
+      <Bitmap guid="guidImages" href="Resources\VisualCodeQuoterToolWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough"/>
     </Bitmaps>
   </Commands>
 
   <Symbols>
     <!-- This is the package guid. -->
-    <GuidSymbol name="guidVisualRoslynQuoterToolWindowPackage" value="{df0f73dc-32b6-410c-a669-e059c67f8af2}" />
+    <GuidSymbol name="guidVisualCodeQuoterToolWindowPackage" value="{838b1ad2-a578-40b0-97a3-227b15627b70}" />
 
     <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidVisualRoslynQuoterToolWindowPackageCmdSet" value="{d8494870-d28a-41f2-a471-eb3b3aead117}">
-      <IDSymbol name="VisualRoslynQuoterToolWindowCommandId" value="0x0100" />
+    <GuidSymbol name="guidVisualCodeQuoterToolWindowPackageCmdSet" value="{69c67d30-fb3a-497f-abe7-c1992636cb08}">
+      <IDSymbol name="VisualCodeQuoterToolWindowCommandId" value="0x0100" />
     </GuidSymbol>
 
-    <GuidSymbol name="guidImages" value="{ad9eb4a3-1f7a-4900-b89c-7c6838d81c06}" >
+    <GuidSymbol name="guidImages" value="{2727fbd0-ee20-4328-8214-92dcd567e8bc}" >
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
       <IDSymbol name="bmpPicSearch" value="3" />

@@ -1,11 +1,12 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="VisualRoslynQuoterToolWindowCommand.cs" company="Company">
+// <copyright file="VisualCodeQuoterToolWindowCommand.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 
 using System;
 using System.ComponentModel.Design;
+using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -14,7 +15,7 @@ namespace WaveDev.VisualRoslynQuoter
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class VisualRoslynQuoterToolWindowCommand
+    internal sealed class VisualCodeQuoterToolWindowCommand
     {
         /// <summary>
         /// Command ID.
@@ -24,36 +25,32 @@ namespace WaveDev.VisualRoslynQuoter
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("d8494870-d28a-41f2-a471-eb3b3aead117");
+        public static readonly Guid CommandSet = new Guid("69c67d30-fb3a-497f-abe7-c1992636cb08");
 
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        private readonly Package package;
+        private readonly Package _package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VisualRoslynQuoterToolWindowCommand"/> class.
+        /// Initializes a new instance of the <see cref="VisualCodeQuoterToolWindowCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private VisualRoslynQuoterToolWindowCommand(Package package)
+        private VisualCodeQuoterToolWindowCommand(Package package)
         {
             if (package == null)
             {
                 throw new ArgumentNullException("package");
             }
 
-            package = package;
+            _package = package;
 
-            if (ServiceProvider == null)
-                return;
-
-            var commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-
+            OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(ShowToolWindow, menuCommandID);
+                var menuItem = new MenuCommand(this.ShowToolWindow, menuCommandID);
                 commandService.AddCommand(menuItem);
             }
         }
@@ -61,7 +58,7 @@ namespace WaveDev.VisualRoslynQuoter
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static VisualRoslynQuoterToolWindowCommand Instance
+        public static VisualCodeQuoterToolWindowCommand Instance
         {
             get;
             private set;
@@ -74,7 +71,7 @@ namespace WaveDev.VisualRoslynQuoter
         {
             get
             {
-                return package;
+                return _package;
             }
         }
 
@@ -84,7 +81,7 @@ namespace WaveDev.VisualRoslynQuoter
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Package package)
         {
-            Instance = new VisualRoslynQuoterToolWindowCommand(package);
+            Instance = new VisualCodeQuoterToolWindowCommand(package);
         }
 
         /// <summary>
@@ -97,8 +94,9 @@ namespace WaveDev.VisualRoslynQuoter
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = package.FindToolWindow(typeof(VisualRoslynQuoterToolWindow), 0, true);
-            if ((null == window) || (null == window.Frame))
+            var window = _package.FindToolWindow(typeof(VisualCodeQuoterToolWindow), 0, true);
+
+            if ((window == null) || (window.Frame == null))
             {
                 throw new NotSupportedException("Cannot create tool window");
             }
