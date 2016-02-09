@@ -9,7 +9,6 @@ namespace WaveDev.VisualRoslynQuoter
     using System;
     using System.Runtime.InteropServices;
     using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.TextManager.Interop;
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
@@ -35,16 +34,6 @@ namespace WaveDev.VisualRoslynQuoter
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
             Content = new VisualCodeQuoterToolWindowControl();
-
-            var codeWindow = GetService(typeof(SVsCodeWindow)) as IVsCodeWindow;
-
-            if (codeWindow != null)
-            {
-                IVsTextLines textLines;
-                var getBufferResult = codeWindow.GetBuffer(out textLines);
-            }
         }
-
-
     }
 }

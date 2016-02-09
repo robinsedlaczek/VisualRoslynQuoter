@@ -13,8 +13,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <TextBlock Grid.Row="0" Padding="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="LightGray" Foreground="Black" TextWrapping="Wrap">Use the following Roslyn Syntax Api calls to generate the code that you can see in the currently active editor window.</TextBlock>
-        <TextBox x:Name="QuotedCodeTextBox" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+
+        <TextBlock Foreground="Black" Grid.Row="0" Padding="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="LightGray" TextWrapping="Wrap" Text="{Binding HintText}" />
+        <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Text="{Binding QuotedCode}"/>
     </Grid>
 </UserControl>
