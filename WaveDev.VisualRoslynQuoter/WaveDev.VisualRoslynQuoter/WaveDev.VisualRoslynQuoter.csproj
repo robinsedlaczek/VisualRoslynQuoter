@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
+    <EmbeddedResource Include="Resources\Copy.png" />
     <Content Include="Resources\VisualCodeQuoterToolWindowCommand.png" />
     <Content Include="Resources\VisualCodeQuoterToolWindowPackage.ico" />
     <Content Include="stylesheet.css" />
