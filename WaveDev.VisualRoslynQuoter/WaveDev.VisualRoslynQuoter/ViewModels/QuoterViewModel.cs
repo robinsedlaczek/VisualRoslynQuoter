@@ -1,6 +1,9 @@
 ﻿using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.ComponentModel;
+using System.Windows.Input;
+using Microsoft.VisualStudio.Text;
+using System.Runtime.CompilerServices;
 
 namespace WaveDev.VisualRoslynQuoter.ViewModels
 {
@@ -8,15 +11,41 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
     {
         private string _quotedCode;
         private string _hintText;
+        private ITextSnapshot _textSnapshot;
 
         public QuoterViewModel()
         {
             WpfTextViewCreationListener.TextViewLayoutChanged += OnWpfTextViewCreationListenerTextViewLayoutChanged;
 
+            PasteCommand = new PasteCommand(this);
             HintText = "No Code Selected";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public ICommand PasteCommand
+        {
+            get;
+            private set;
+        }
+
+        public ITextSnapshot TextSnapshot
+        {
+            get
+            {
+                return _textSnapshot;
+            }
+
+            private set
+            {
+                if (_textSnapshot!=value)
+                {
+                    _textSnapshot = value;
+
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         public string OldCode
         {
@@ -37,7 +66,7 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
                 {
                     _quotedCode = value;
 
-                    NotifyPropertyChanged(nameof(QuotedCode));
+                    NotifyPropertyChanged();
 
                     if (!string.IsNullOrEmpty(_quotedCode.Trim()))
                         HintText = "Use the following Roslyn Syntax Api calls to generate the selected code from the active editor window.";
@@ -65,7 +94,7 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
             }
         }
 
-        private void NotifyPropertyChanged(string propertyName)
+        private void NotifyPropertyChanged([CallerMemberName]string propertyName = null)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -75,7 +104,9 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
         {
             try
             {
-                var code = e.NewSnapshot.GetText();
+                TextSnapshot = e.NewSnapshot;
+
+                var code = TextSnapshot.GetText();
 
                 if (code == OldCode)
                     return;

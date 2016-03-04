@@ -8,6 +8,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Text;
 
 namespace WaveDev.VisualRoslynQuoter
 {
