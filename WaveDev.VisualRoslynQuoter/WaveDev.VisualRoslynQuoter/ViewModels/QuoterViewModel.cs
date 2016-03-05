@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Microsoft.VisualStudio.Text;
 using System.Runtime.CompilerServices;
+using WaveDev.VisualRoslynQuoter.Commands;
 
 namespace WaveDev.VisualRoslynQuoter.ViewModels
 {
@@ -22,6 +23,12 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public ICommand CopyCommand
+        {
+            get;
+            private set;
+        }
 
         public ICommand PasteCommand
         {

@@ -51,7 +51,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ViewModels\PasteCommand.cs" />
+    <Compile Include="Commands\CopyCommand.cs" />
+    <Compile Include="Commands\PasteCommand.cs" />
     <Compile Include="ViewModels\QuoterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quoter.cs" />
@@ -73,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
-    <EmbeddedResource Include="Resources\Copy.png" />
     <Content Include="Resources\VisualCodeQuoterToolWindowCommand.png" />
     <Content Include="Resources\VisualCodeQuoterToolWindowPackage.ico" />
     <Content Include="stylesheet.css" />
@@ -282,6 +282,10 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
     <Page Include="VisualCodeQuoterToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

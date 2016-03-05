@@ -2,8 +2,9 @@
 using System;
 using System.IO;
 using System.Windows.Input;
+using WaveDev.VisualRoslynQuoter.ViewModels;
 
-namespace WaveDev.VisualRoslynQuoter.ViewModels
+namespace WaveDev.VisualRoslynQuoter.Commands
 {
     internal class PasteCommand : ICommand
     {
@@ -28,7 +29,10 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
 
         public bool CanExecute(object parameter)
         {
-            return !string.IsNullOrEmpty(_model.QuotedCode) && !string.IsNullOrWhiteSpace(_model.QuotedCode);
+            var thereIsQuotedCode =
+                !string.IsNullOrEmpty(_model.QuotedCode) && !string.IsNullOrWhiteSpace(_model.QuotedCode);
+
+            return thereIsQuotedCode;
         }
 
         public void Execute(object parameter)
