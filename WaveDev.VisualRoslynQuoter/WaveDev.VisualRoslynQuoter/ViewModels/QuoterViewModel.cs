@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Microsoft.VisualStudio.Text;
 using System.Runtime.CompilerServices;
 using WaveDev.VisualRoslynQuoter.Commands;
+using Microsoft.VisualStudio.Text.Operations;
 
 namespace WaveDev.VisualRoslynQuoter.ViewModels
 {
@@ -19,6 +20,8 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
             WpfTextViewCreationListener.TextViewLayoutChanged += OnWpfTextViewCreationListenerTextViewLayoutChanged;
 
             PasteCommand = new PasteCommand(this);
+            CopyCommand = new CopyCommand(this);
+
             HintText = "No Code Selected";
         }
 
@@ -30,10 +33,26 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
             private set;
         }
 
+        public string CopyCommandDescription
+        {
+            get
+            {
+                return "Copy the quoted code from this window into the clipboard.";
+            }
+        }
+
         public ICommand PasteCommand
         {
             get;
             private set;
+        }
+
+        public string PasteCommandDescription
+        {
+            get
+            {
+                return "Paste the quoted code from this window into the current code editor at the current cursor position.";
+            }
         }
 
         public ITextSnapshot TextSnapshot
@@ -101,17 +120,30 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
             }
         }
 
+        public ITextView TextView
+        {
+            get;
+            private set;
+        }
+        public IEditorOperationsFactoryService EditorOperationsFactoryService
+        {
+            get;
+            private set;
+        }
+
         private void NotifyPropertyChanged([CallerMemberName]string propertyName = null)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void OnWpfTextViewCreationListenerTextViewLayoutChanged(TextViewLayoutChangedEventArgs e)
+        private void OnWpfTextViewCreationListenerTextViewLayoutChanged(TextViewLayoutChangedEventArgs e, ITextView textView, IEditorOperationsFactoryService editorOperationsFactoryService)
         {
             try
             {
+                TextView = textView;
                 TextSnapshot = e.NewSnapshot;
+                EditorOperationsFactoryService = editorOperationsFactoryService;
 
                 var code = TextSnapshot.GetText();
 

@@ -74,6 +74,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
+    <Resource Include="Resources\CopyToClipboard.png" />
+    <Resource Include="Resources\Paste.png" />
     <Content Include="Resources\VisualCodeQuoterToolWindowCommand.png" />
     <Content Include="Resources\VisualCodeQuoterToolWindowPackage.ico" />
     <Content Include="stylesheet.css" />

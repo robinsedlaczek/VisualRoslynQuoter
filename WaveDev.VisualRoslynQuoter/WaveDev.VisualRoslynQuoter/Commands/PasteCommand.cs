@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.Text;
 using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Input;
 using WaveDev.VisualRoslynQuoter.ViewModels;
 
@@ -8,8 +9,14 @@ namespace WaveDev.VisualRoslynQuoter.Commands
 {
     internal class PasteCommand : ICommand
     {
+        #region Private Fields
+
         private QuoterViewModel _model;
         private ITextSnapshot _textSnapshot;
+
+        #endregion
+
+        #region Construction
 
         public PasteCommand(QuoterViewModel model)
         {
@@ -17,13 +24,9 @@ namespace WaveDev.VisualRoslynQuoter.Commands
             _model.PropertyChanged += OnModelPropertyChanged;
         }
 
-        private void OnModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(_model.QuotedCode) && CanExecuteChanged != null)
-                CanExecuteChanged(this, new EventArgs());
-            else if (e.PropertyName == nameof(_model.TextSnapshot))
-                _textSnapshot = _model.TextSnapshot;
-        }
+        #endregion
+
+        #region ICommand
 
         public event EventHandler CanExecuteChanged;
 
@@ -37,10 +40,41 @@ namespace WaveDev.VisualRoslynQuoter.Commands
 
         public void Execute(object parameter)
         {
-            if (_textSnapshot.TextBuffer.CheckEditAccess())
+            var operations = _model.EditorOperationsFactoryService.GetEditorOperations(_model.TextView);
+
+            if (operations.CanPaste)
             {
-                _textSnapshot.TextBuffer.Insert(0, _model.QuotedCode);
+                Clipboard.SetText(_model.QuotedCode, TextDataFormat.UnicodeText);
+                operations.Paste();
             }
         }
+
+        #endregion
+
+        #region Private Members
+
+        private void OnModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(_model.QuotedCode):
+                    break;
+                case nameof(_model.TextSnapshot):
+                    _textSnapshot = _model.TextSnapshot;
+                    break;
+                default:
+                    return;
+            }
+
+            FireCanExecuteChanged();
+        }
+
+        private void FireCanExecuteChanged()
+        {
+            if (CanExecuteChanged != null)
+                CanExecuteChanged(this, new EventArgs());
+        }
+
+        #endregion
     }
 }

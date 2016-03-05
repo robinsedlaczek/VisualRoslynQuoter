@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
 using System;
 using System.ComponentModel.Composition;
@@ -11,10 +12,13 @@ namespace WaveDev.VisualRoslynQuoter
     [TextViewRole(PredefinedTextViewRoles.Document)]
     public class WpfTextViewCreationListener : IWpfTextViewCreationListener
     {
-        public delegate void TextViewLayoutChangedEventHanlder(TextViewLayoutChangedEventArgs e);
+        private IWpfTextView _textView;
+
+        public delegate void TextViewLayoutChangedEventHanlder(TextViewLayoutChangedEventArgs e, ITextView textView, IEditorOperationsFactoryService editorOperationsFactoryService);
         public static event TextViewLayoutChangedEventHanlder TextViewLayoutChanged;
 
-        private IWpfTextView _textView;
+        [Import]
+        public IEditorOperationsFactoryService EditorOperationsFactoryService;
 
         public void TextViewCreated(IWpfTextView textView)
         {
@@ -27,7 +31,7 @@ namespace WaveDev.VisualRoslynQuoter
             try
             {
                 if (TextViewLayoutChanged != null)
-                    TextViewLayoutChanged(e);
+                    TextViewLayoutChanged(e, _textView, EditorOperationsFactoryService);
             }
             catch (Exception exception)
             {
