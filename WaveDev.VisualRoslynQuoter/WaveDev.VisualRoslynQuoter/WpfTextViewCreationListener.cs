@@ -14,8 +14,8 @@ namespace WaveDev.VisualRoslynQuoter
     {
         private IWpfTextView _textView;
 
-        public delegate void TextViewLayoutChangedEventHanlder(TextViewLayoutChangedEventArgs e, ITextView textView, IEditorOperationsFactoryService editorOperationsFactoryService);
-        public static event TextViewLayoutChangedEventHanlder TextViewLayoutChanged;
+        public delegate void TextViewLayoutChangedEventHandler(TextViewLayoutChangedEventArgs e, ITextView textView, IEditorOperationsFactoryService editorOperationsFactoryService);
+        public static event TextViewLayoutChangedEventHandler TextViewLayoutChanged;
 
         [Import]
         public IEditorOperationsFactoryService EditorOperationsFactoryService;

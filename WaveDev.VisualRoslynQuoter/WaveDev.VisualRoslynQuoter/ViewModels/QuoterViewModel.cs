@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.Text;
 using System.Runtime.CompilerServices;
 using WaveDev.VisualRoslynQuoter.Commands;
 using Microsoft.VisualStudio.Text.Operations;
+using System.Diagnostics;
+using System.Text;
 
 namespace WaveDev.VisualRoslynQuoter.ViewModels
 {
@@ -14,10 +16,11 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
         private string _quotedCode;
         private string _hintText;
         private ITextSnapshot _textSnapshot;
+        private QuotedCodeStyle _quotedCodeStyle;
 
         public QuoterViewModel()
         {
-            WpfTextViewCreationListener.TextViewLayoutChanged += OnWpfTextViewCreationListenerTextViewLayoutChanged;
+            WpfTextViewCreationListener.TextViewLayoutChanged += OnTextViewLayoutChanged;
 
             PasteCommand = new PasteCommand(this);
             CopyCommand = new CopyCommand(this);
@@ -37,7 +40,15 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
         {
             get
             {
-                return "Copy the quoted code from this window into the clipboard.";
+                return "Copy the syntax generation code into the clipboard.";
+            }
+        }
+
+        public string CopyCommandText
+        {
+            get
+            {
+                return "Copy to Clipboard";
             }
         }
 
@@ -51,7 +62,15 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
         {
             get
             {
-                return "Paste the quoted code from this window into the current code editor at the current cursor position.";
+                return "Paste the syntax generation code into your code.";
+            }
+        }
+
+        public string PasteCommandText
+        {
+            get
+            {
+                return "Paste into Editor";
             }
         }
 
@@ -102,6 +121,25 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
             }
         }
 
+        public QuotedCodeStyle QuotedCodeStyle
+        {
+            get
+            {
+                return _quotedCodeStyle;
+            }
+
+            private set
+            {
+                if (_quotedCodeStyle != value)
+                {
+                    _quotedCodeStyle = value;
+
+                    NotifyPropertyChanged();
+                    UpdateQuotedCode(true);
+                }
+            }
+        }
+
         public string HintText
         {
             get
@@ -125,6 +163,7 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
             get;
             private set;
         }
+
         public IEditorOperationsFactoryService EditorOperationsFactoryService
         {
             get;
@@ -137,27 +176,66 @@ namespace WaveDev.VisualRoslynQuoter.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void OnWpfTextViewCreationListenerTextViewLayoutChanged(TextViewLayoutChangedEventArgs e, ITextView textView, IEditorOperationsFactoryService editorOperationsFactoryService)
+        private void OnTextViewLayoutChanged(TextViewLayoutChangedEventArgs e, ITextView textView, IEditorOperationsFactoryService editorOperationsFactoryService)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             try
             {
+                if (TextSnapshot == e.NewSnapshot)
+                    return;
+
                 TextView = textView;
                 TextSnapshot = e.NewSnapshot;
                 EditorOperationsFactoryService = editorOperationsFactoryService;
 
+                UpdateQuotedCode(false);
+            }
+            catch (Exception exception)
+            {
+                throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
+                Debug.WriteLine(stopwatch.ElapsedMilliseconds + "ms for quoting code.");
+            }
+        }
+
+        private void UpdateQuotedCode(bool forceUpdate)
+        {
+            try
+            {
                 var code = TextSnapshot.GetText();
 
-                if (code == OldCode)
+                if (code == OldCode && !forceUpdate)
                     return;
 
                 var quoter = new Quoter();
+                var quotedCode = quoter.Quote(code);
 
-                QuotedCode = quoter.Quote(code);
+                switch (QuotedCodeStyle)
+                {
+                    case QuotedCodeStyle.None:
+                        break;
+                    case QuotedCodeStyle.AsVariable:
+                        quotedCode = $"var syntax = {quotedCode};";
+                        break;
+                    case QuotedCodeStyle.AsMethod:
+                        quotedCode = $"private SyntaxNode GetSyntax()\r\n{{\r\nvar syntax = {quotedCode};\r\n\r\n\treturn syntax;\r\n}}";
+                        break;
+                    default:
+                        break;
+                }
+
+                QuotedCode = quotedCode;
                 OldCode = code;
             }
             catch (Exception exception)
             {
 
+                throw;
             }
         }
     }

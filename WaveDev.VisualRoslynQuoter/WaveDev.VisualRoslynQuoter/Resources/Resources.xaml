@@ -1,8 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ap="clr-namespace:WaveDev.VisualRoslynQuoter.Resources">
-    
+    xmlns:ap="clr-namespace:WaveDev.VisualRoslynQuoter.Resources"
+>
+
     <Style x:Key="CopyButton" TargetType="Button">
         <Setter Property="ContentTemplate">
             <Setter.Value>

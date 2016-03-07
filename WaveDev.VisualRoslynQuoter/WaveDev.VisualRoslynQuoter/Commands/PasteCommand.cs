@@ -44,8 +44,13 @@ namespace WaveDev.VisualRoslynQuoter.Commands
 
             if (operations.CanPaste)
             {
+                var oldTextInClipboard = Clipboard.ContainsText(TextDataFormat.UnicodeText) ? Clipboard.GetText(TextDataFormat.UnicodeText) : string.Empty;
+
                 Clipboard.SetText(_model.QuotedCode, TextDataFormat.UnicodeText);
                 operations.Paste();
+
+                if (!string.IsNullOrEmpty(oldTextInClipboard))
+                    Clipboard.SetText(oldTextInClipboard, TextDataFormat.UnicodeText);
             }
         }
 
