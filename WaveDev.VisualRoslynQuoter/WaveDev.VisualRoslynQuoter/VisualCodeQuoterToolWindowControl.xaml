@@ -11,7 +11,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow"
 >
-    
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,10 +23,24 @@
                     <x:Type TypeName="vm:QuotedCodeStyle" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
+            <Storyboard x:Key="OnLoaded1"/>
 
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Normal">
+                <VisualState x:Name="Enabled"/>
+                <VisualState x:Name="Disabled"/>
+                <VisualState x:Name="MouseOver">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background)" Storyboard.TargetName="button">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -34,14 +48,14 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <ComboBox SelectedItem="{Binding QuotedCodeStyle}" ItemsSource="{Binding Source={StaticResource QuotedCodeStyleValues}}" Width="150" Margin="2,2"/>
-            <Button Command="{Binding CopyCommand}" ToolTip="{Binding CopyCommandDescription}" ToolTipService.ShowOnDisabled="True" Background="Transparent" BorderThickness="0">
+            <Button x:Name="button" Command="{Binding CopyCommand}" ToolTip="{Binding CopyCommandDescription}" ToolTipService.ShowOnDisabled="True" Background="Transparent" BorderThickness="0">
                 <Image Source="Resources\CopyToClipboard.png"/>
             </Button>
             <Button Command="{Binding PasteCommand}" ToolTip="{Binding PasteCommandDescription}" ToolTipService.ShowOnDisabled="True"  Background="Transparent" BorderThickness="0">
                 <Image Source="Resources\Paste.png"/>
             </Button>
         </StackPanel>
-        
+
         <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Text="{Binding QuotedCode}"/>
     </Grid>
 </UserControl>
